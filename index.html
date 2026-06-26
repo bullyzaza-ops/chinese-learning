@@ -1,19 +1,242 @@
 <!DOCTYPE html>
-<html>
+<html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>เรียนภาษาจีน</title>
-<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>เรียนภาษาจีน 🇨🇳</title>
+<meta name="theme-color" content="#1A1A2E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:#FDFAF6;min-height:100vh}
+.hero{background:linear-gradient(135deg,#1A1A2E,#2D1B4E);padding:32px 20px 28px;text-align:center;color:#fff}
+.hero-emoji{font-size:44px;margin-bottom:8px}
+.hero-title{font-size:28px;font-weight:900}
+.hero-sub{color:#C8A96E;font-size:18px;margin-top:4px;font-weight:600}
+.hero-desc{color:#aaa;font-size:13px;margin-top:10px}
+.container{max-width:520px;margin:0 auto;padding:24px 16px}
+.progress-label{display:flex;justify-content:space-between;margin-bottom:6px;font-size:13px;color:#888}
+.progress-bar{background:#F0EDE8;border-radius:8px;height:10px;overflow:hidden;margin-bottom:24px}
+.progress-fill{height:100%;background:linear-gradient(90deg,#E8563A,#E8A23A);border-radius:8px;transition:width 0.5s ease}
+.tone-legend{background:#fff;border:1px solid #F0EDE8;border-radius:12px;padding:12px 16px;margin-bottom:20px;display:flex;justify-content:space-around;flex-wrap:wrap;gap:8px}
+.tone-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:5px}
+.tone-item{display:flex;align-items:center;font-size:12px;color:#555}
+.lesson-btn{width:100%;background:#fff;border:2px solid #F0EDE8;border-radius:16px;padding:16px 18px;display:flex;align-items:center;gap:14px;text-align:left;cursor:pointer;margin-bottom:12px;transition:all 0.2s;box-shadow:0 2px 12px rgba(0,0,0,0.05)}
+.lesson-btn.done{border-color:var(--color)}
+.lesson-btn.locked{background:#F5F3F0;opacity:0.55;cursor:not-allowed}
+.lesson-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.lesson-title{font-weight:800;font-size:15px;color:#1A1A2E}
+.lesson-meta{font-size:12px;color:#999;margin-top:3px}
+.lesson-meta.done{color:#3A9E6A;font-weight:700}
+.lesson-arrow{color:var(--color);font-weight:800;font-size:18px;margin-left:auto}
+.complete-box{background:linear-gradient(135deg,#1A1A2E,#2D1B4E);border-radius:16px;padding:24px 20px;text-align:center;color:#fff;margin-top:24px}
+/* Lesson View */
+.back-btn{background:none;border:none;color:#888;font-size:14px;cursor:pointer;margin-bottom:16px;padding:0}
+.lesson-header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.lesson-header-icon{border-radius:12px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:24px}
+.tabs{display:flex;gap:8px;margin-bottom:20px}
+.tab-btn{flex:1;padding:9px 0;border-radius:9px;border:none;font-weight:700;font-size:13px;cursor:pointer;transition:all 0.2s}
+.theory-box{background:#F8F5F0;border-radius:14px;padding:20px}
+.theory-text{white-space:pre-line;line-height:1.8;font-size:15px;color:#333}
+.next-btn{margin-top:20px;color:#fff;border:none;border-radius:10px;padding:11px 24px;font-weight:700;cursor:pointer;font-size:14px}
+.words-hint{color:#888;font-size:13px;margin-bottom:16px}
+.words-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.word-card{cursor:pointer;user-select:none;background:#fff;border:2px solid #F0EDE8;border-radius:14px;padding:18px 16px;text-align:center;transition:all 0.25s ease;min-height:90px;display:flex;flex-direction:column;justify-content:center;gap:4px}
+.word-card.flipped{background:#1A1A2E;border-color:#1A1A2E}
+.word-zh{font-size:32px;font-weight:700;color:#1A1A2E}
+.word-hint{font-size:11px;color:#bbb}
+.word-pinyin{font-size:18px;font-weight:600}
+.word-meaning{font-size:15px;color:#fff;margin-top:4px}
+.quiz-box{background:#F8F5F0;border-radius:14px;padding:20px}
+.quiz-header{display:flex;justify-content:space-between;margin-bottom:16px;font-size:13px;color:#888}
+.quiz-question{font-weight:700;font-size:17px;margin-bottom:18px;line-height:1.5}
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.quiz-opt{padding:12px 8px;border-radius:10px;border:none;font-size:15px;font-weight:600;cursor:pointer;transition:all 0.2s;background:#F8F5F0;color:#1A1A2E}
+.quiz-result{text-align:center;padding:24px 0}
+.result-score{font-size:22px;font-weight:700;margin-top:8px}
+.result-msg{color:#888;margin-top:4px;margin-bottom:20px}
+.result-btn{border:none;border-radius:10px;padding:12px 28px;font-size:15px;font-weight:700;cursor:pointer}
+</style>
 </head>
 <body>
-<div id="root"></div>
-<script type="text/babel" src="chinese-learning.jsx"></script>
-<script type="text/babel">
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
+
+<div id="app"></div>
+
+<script>
+const LESSONS = [
+  {id:1,title:"พินอิน (Pinyin) คืออะไร?",emoji:"🔤",color:"#E8563A",
+   theory:`พินอินคือระบบถอดเสียงภาษาจีนด้วยตัวอักษรโรมัน ใช้เพื่อช่วยในการออกเสียง\n\nภาษาจีนกลางมี 4 วรรณยุกต์ + เสียงเบา:\n• 1st tone (ā) — เสียงสูงยาว เช่น 妈 (mā) = แม่\n• 2nd tone (á) — เสียงขึ้น เช่น 麻 (má) = งา\n• 3rd tone (ǎ) — เสียงลงแล้วขึ้น เช่น 马 (mǎ) = ม้า\n• 4th tone (à) — เสียงลง เช่น 骂 (mà) = ด่า\n• Neutral tone — เสียงเบา เช่น 吗 (ma) = คำถาม`,
+   words:[{zh:"妈",pinyin:"mā",meaning:"แม่",tone:1},{zh:"麻",pinyin:"má",meaning:"งา/ชา",tone:2},{zh:"马",pinyin:"mǎ",meaning:"ม้า",tone:3},{zh:"骂",pinyin:"mà",meaning:"ด่า",tone:4}],
+   quiz:[{q:"妈 (mā) แปลว่าอะไร?",opts:["ม้า","แม่","งา","ด่า"],a:1},{q:"วรรณยุกต์ที่ 3 มีลักษณะเสียงอย่างไร?",opts:["เสียงสูงยาว","เสียงขึ้น","เสียงลงแล้วขึ้น","เสียงลง"],a:2},{q:"马 (mǎ) แปลว่าอะไร?",opts:["แม่","ด่า","ม้า","งา"],a:2}]},
+  {id:2,title:"การทักทายพื้นฐาน",emoji:"👋",color:"#E8A23A",
+   theory:`การทักทายเป็นสิ่งแรกที่ต้องเรียน! ในภาษาจีนมีการทักทายที่แตกต่างกันตามสถานการณ์`,
+   words:[{zh:"你好",pinyin:"nǐ hǎo",meaning:"สวัสดี"},{zh:"早上好",pinyin:"zǎo shang hǎo",meaning:"อรุณสวัสดิ์"},{zh:"谢谢",pinyin:"xiè xiè",meaning:"ขอบคุณ"},{zh:"对不起",pinyin:"duì bu qǐ",meaning:"ขอโทษ"},{zh:"再见",pinyin:"zài jiàn",meaning:"ลาก่อน"},{zh:"晚上好",pinyin:"wǎn shang hǎo",meaning:"สวัสดีตอนเย็น"}],
+   quiz:[{q:"\"ขอบคุณ\" ในภาษาจีนคือ?",opts:["你好","再见","谢谢","对不起"],a:2},{q:"你好 อ่านว่าอะไร?",opts:["xiè xiè","nǐ hǎo","zài jiàn","duì bu qǐ"],a:1},{q:"再见 แปลว่าอะไร?",opts:["สวัสดี","ขอบคุณ","ขอโทษ","ลาก่อน"],a:3}]},
+  {id:3,title:"ตัวเลข 0–10",emoji:"🔢",color:"#3A9E6A",
+   theory:`ตัวเลขในภาษาจีนสำคัญมาก ใช้ในชีวิตประจำวัน เช่น ราคา เบอร์โทร วันที่`,
+   words:[{zh:"零",pinyin:"líng",meaning:"0"},{zh:"一",pinyin:"yī",meaning:"1"},{zh:"二",pinyin:"èr",meaning:"2"},{zh:"三",pinyin:"sān",meaning:"3"},{zh:"四",pinyin:"sì",meaning:"4"},{zh:"五",pinyin:"wǔ",meaning:"5"},{zh:"六",pinyin:"liù",meaning:"6"},{zh:"七",pinyin:"qī",meaning:"7"},{zh:"八",pinyin:"bā",meaning:"8"},{zh:"九",pinyin:"jiǔ",meaning:"9"},{zh:"十",pinyin:"shí",meaning:"10"}],
+   quiz:[{q:"五 (wǔ) คือเลขอะไร?",opts:["3","4","5","6"],a:2},{q:"เลข 8 ในภาษาจีนคือ?",opts:["七","八","九","六"],a:1},{q:"十 (shí) คือเลขอะไร?",opts:["7","8","9","10"],a:3}]},
+  {id:4,title:"คำสรรพนาม",emoji:"🙋",color:"#3A6AE8",
+   theory:`คำสรรพนามใช้แทนชื่อบุคคล เป็นพื้นฐานในการสร้างประโยค\n\nเพิ่ม 们 (men) หลังสรรพนามเอกพจน์ เพื่อทำให้เป็นพหูพจน์`,
+   words:[{zh:"我",pinyin:"wǒ",meaning:"ฉัน/ผม"},{zh:"你",pinyin:"nǐ",meaning:"คุณ"},{zh:"他",pinyin:"tā",meaning:"เขา (ชาย)"},{zh:"她",pinyin:"tā",meaning:"เธอ (หญิง)"},{zh:"我们",pinyin:"wǒ men",meaning:"พวกเรา"},{zh:"你们",pinyin:"nǐ men",meaning:"พวกคุณ"},{zh:"他们",pinyin:"tā men",meaning:"พวกเขา"}],
+   quiz:[{q:"\"ฉัน\" ในภาษาจีนคือ?",opts:["你","他","我","她"],a:2},{q:"我们 แปลว่าอะไร?",opts:["ฉัน","คุณ","พวกเขา","พวกเรา"],a:3},{q:"他 กับ 她 ต่างกันอย่างไร?",opts:["ไม่ต่างกัน","เพศชายกับเพศหญิง","เอกพจน์กับพหูพจน์","ต่างกันทั้งหมด"],a:1}]},
+  {id:5,title:"ประโยคพื้นฐาน",emoji:"💬",color:"#9B3AE8",
+   theory:`โครงสร้างประโยคภาษาจีนคล้ายภาษาไทย: ประธาน + กริยา + กรรม\n\nคำถามใช้ 吗 (ma) ต่อท้ายประโยคบอกเล่า\nตอบรับ: 是 (shì) = ใช่ | ตอบปฏิเสธ: 不 (bù) = ไม่`,
+   words:[{zh:"我是泰国人",pinyin:"wǒ shì tài guó rén",meaning:"ฉันเป็นคนไทย"},{zh:"你叫什么名字",pinyin:"nǐ jiào shén me míng zi",meaning:"คุณชื่ออะไร?"},{zh:"我叫…",pinyin:"wǒ jiào...",meaning:"ฉันชื่อ..."},{zh:"你好吗",pinyin:"nǐ hǎo ma",meaning:"คุณสบายดีไหม?"},{zh:"我很好",pinyin:"wǒ hěn hǎo",meaning:"ฉันสบายดีมาก"},{zh:"不客气",pinyin:"bù kè qì",meaning:"ไม่เป็นไร"}],
+   quiz:[{q:"จะถามว่า \"สบายดีไหม?\" พูดว่า?",opts:["你好","你好吗","我很好","谢谢"],a:1},{q:"不 (bù) แปลว่าอะไร?",opts:["ใช่","ไม่","มาก","น้อย"],a:1},{q:"จะแนะนำตัวว่า \"ฉันชื่อ...\" พูดว่า?",opts:["我是...","你叫...","我叫...","他叫..."],a:2}]}
+];
+
+const TONE_COLORS = {1:"#E8563A",2:"#E8A23A",3:"#3A9E6A",4:"#3A6AE8"};
+let completedIds = JSON.parse(localStorage.getItem('completed')||'[]');
+let activeLesson = null;
+let quizState = null;
+let flippedCards = {};
+
+function saveCompleted(){localStorage.setItem('completed',JSON.stringify(completedIds));}
+
+function render(){
+  const app = document.getElementById('app');
+  if(activeLesson) app.innerHTML = renderLesson();
+  else app.innerHTML = renderHome();
+  bindEvents();
+}
+
+function renderHome(){
+  const done = completedIds.length;
+  const total = LESSONS.length;
+  const pct = Math.round(done/total*100);
+  let lessonsHTML = LESSONS.map((l,i)=>{
+    const isDone = completedIds.includes(l.id);
+    const locked = i>0 && !completedIds.includes(LESSONS[i-1].id);
+    return `<button class="lesson-btn${isDone?' done':''}${locked?' locked':''}" style="--color:${l.color}" data-id="${l.id}" ${locked?'disabled':''}>
+      <div class="lesson-icon" style="background:${locked?'#ddd':l.color+'22'}">${locked?'🔒':l.emoji}</div>
+      <div style="flex:1">
+        <div class="lesson-title" style="color:${locked?'#aaa':'#1A1A2E'}">บทที่ ${l.id}: ${l.title}</div>
+        <div class="lesson-meta${isDone?' done':''}">${locked?'ผ่านบทก่อนหน้าก่อน':isDone?'✅ ผ่านแล้ว':`${l.words.length} คำศัพท์ · ${l.quiz.length} คำถาม`}</div>
+      </div>
+      ${!locked?`<div class="lesson-arrow" style="color:${l.color}">›</div>`:''}
+    </button>`;
+  }).join('');
+  const completeBox = done===total?`<div class="complete-box"><div style="font-size:40px;margin-bottom:8px">🏆</div><div style="font-weight:900;font-size:20px">จบหลักสูตรพื้นฐานแล้ว!</div><div style="color:#C8A96E;margin-top:6px;font-size:14px">厉害了！(lì hài le) — เก่งมาก!</div><div style="color:#aaa;font-size:12px;margin-top:8px">ขั้นต่อไป: เรียนตัวอักษรจีน (汉字) และขยายคำศัพท์</div></div>`:'';
+  return `
+    <div class="hero"><div class="hero-emoji">🇨🇳</div><div class="hero-title">เรียนภาษาจีน</div><div class="hero-sub">从零开始 · เริ่มจาก 0</div><div class="hero-desc">สำหรับผู้เริ่มต้น · ครบทุกพื้นฐาน</div></div>
+    <div class="container">
+      <div class="progress-label"><span>ความคืบหน้า</span><span>${done}/${total} บทเรียน (${pct}%)</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <div class="tone-legend">${[1,2,3,4].map(t=>`<div class="tone-item"><span class="tone-dot" style="background:${TONE_COLORS[t]}"></span>วรรณยุกต์ ${t}</div>`).join('')}</div>
+      ${lessonsHTML}${completeBox}
+    </div>`;
+}
+
+function renderLesson(){
+  const l = activeLesson;
+  const tab = activeLesson._tab||'theory';
+  const isDone = completedIds.includes(l.id);
+  const tabs = [{k:'theory',label:'📖 ทฤษฎี'},{k:'words',label:'🃏 คำศัพท์'},{k:'quiz',label:'📝 แบบทดสอบ'}];
+  let content = '';
+  if(tab==='theory'){
+    content=`<div class="theory-box"><div class="theory-text">${l.theory}</div><button class="next-btn" style="background:${l.color}" data-tab="words">เรียนคำศัพท์ →</button></div>`;
+  } else if(tab==='words'){
+    const cards = l.words.map((w,i)=>{
+      const fl = flippedCards[i];
+      return `<div class="word-card${fl?' flipped':''}" data-card="${i}">
+        ${fl?`<div class="word-pinyin" style="color:${w.tone?TONE_COLORS[w.tone]:l.color}">${w.pinyin}</div><div class="word-meaning">${w.meaning}</div>`
+           :`<div class="word-zh">${w.zh}</div><div class="word-hint">แตะเพื่อดูความหมาย</div>`}
+      </div>`;
+    }).join('');
+    content=`<p class="words-hint">แตะที่การ์ดเพื่อดูความหมายและพินอิน</p><div class="words-grid">${cards}</div><button class="next-btn" style="background:${l.color};width:100%;text-align:center" data-tab="quiz">ทำแบบทดสอบ →</button>`;
+  } else {
+    content = renderQuiz(l);
+  }
+  return `
+    <div style="max-width:520px;margin:0 auto;padding:24px 16px">
+      <button class="back-btn" id="backBtn">← กลับ</button>
+      <div class="lesson-header">
+        <div class="lesson-header-icon" style="background:${l.color}22">${l.emoji}</div>
+        <div><div style="font-weight:800;font-size:19px">${l.title}</div>${isDone?'<div style="color:#3A9E6A;font-size:12px;font-weight:600">✅ ผ่านแล้ว</div>':''}</div>
+      </div>
+      <div class="tabs">${tabs.map(t=>`<button class="tab-btn" style="background:${tab===t.k?l.color:'#F0EDE8'};color:${tab===t.k?'#fff':'#666'}" data-tab="${t.k}">${t.label}</button>`).join('')}</div>
+      ${content}
+    </div>`;
+}
+
+function renderQuiz(l){
+  if(!quizState) quizState={current:0,selected:null,score:0,done:false};
+  const q = l.quiz[quizState.current];
+  if(quizState.done){
+    const passed = quizState.score >= Math.ceil(l.quiz.length*0.7);
+    return `<div class="quiz-box"><div class="quiz-result">
+      <div style="font-size:52px">${passed?'🎉':'💪'}</div>
+      <div class="result-score">${quizState.score}/${l.quiz.length} ข้อถูก</div>
+      <div class="result-msg">${passed?'ผ่านแล้ว! ยอดเยี่ยมมาก':'ลองทำใหม่อีกครั้งนะ'}</div>
+      ${passed?`<button class="result-btn" style="background:#E8563A;color:#fff" id="completeBtn">บทเรียนถัดไป →</button>`:`<button class="result-btn" style="background:#1A1A2E;color:#fff" id="retryBtn">ลองใหม่</button>`}
+    </div></div>`;
+  }
+  const opts = q.opts.map((o,i)=>{
+    let bg='#F8F5F0',color='#1A1A2E';
+    if(quizState.selected!==null){
+      if(i===q.a){bg='#3A9E6A';color='#fff';}
+      else if(i===quizState.selected&&quizState.selected!==q.a){bg='#E8563A';color='#fff';}
+    }
+    return `<button class="quiz-opt" style="background:${bg};color:${color}" data-opt="${i}" ${quizState.selected!==null?'disabled':''}>${o}</button>`;
+  }).join('');
+  return `<div class="quiz-box">
+    <div class="quiz-header"><span>ข้อ ${quizState.current+1}/${l.quiz.length}</span><span>✅ ${quizState.score} ถูก</span></div>
+    <div class="quiz-question">${q.q}</div>
+    <div class="quiz-options">${opts}</div>
+  </div>`;
+}
+
+function bindEvents(){
+  document.querySelectorAll('.lesson-btn:not([disabled])').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const id=parseInt(btn.dataset.id);
+      activeLesson={...LESSONS.find(l=>l.id===id),_tab:'theory'};
+      flippedCards={};quizState=null;render();
+    });
+  });
+  document.getElementById('backBtn')?.addEventListener('click',()=>{activeLesson=null;render();});
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      activeLesson._tab=btn.dataset.tab;
+      if(btn.dataset.tab==='quiz') quizState=null;
+      flippedCards={};render();
+    });
+  });
+  document.querySelectorAll('[data-tab]').forEach(btn=>{
+    if(btn.classList.contains('next-btn')){
+      btn.addEventListener('click',()=>{activeLesson._tab=btn.dataset.tab;if(btn.dataset.tab==='quiz')quizState=null;flippedCards={};render();});
+    }
+  });
+  document.querySelectorAll('.word-card').forEach(card=>{
+    card.addEventListener('click',()=>{
+      const i=parseInt(card.dataset.card);
+      flippedCards[i]=!flippedCards[i];render();
+    });
+  });
+  document.querySelectorAll('.quiz-opt').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const i=parseInt(btn.dataset.opt);
+      const l=activeLesson;
+      const q=l.quiz[quizState.current];
+      quizState.selected=i;
+      if(i===q.a) quizState.score++;
+      render();
+      setTimeout(()=>{
+        if(quizState.current+1<l.quiz.length){quizState.current++;quizState.selected=null;render();}
+        else{quizState.done=true;render();}
+      },1000);
+    });
+  });
+  document.getElementById('completeBtn')?.addEventListener('click',()=>{
+    if(!completedIds.includes(activeLesson.id)){completedIds.push(activeLesson.id);saveCompleted();}
+    activeLesson=null;render();
+  });
+  document.getElementById('retryBtn')?.addEventListener('click',()=>{quizState=null;render();});
+}
+
+render();
 </script>
 </body>
 </html>
